@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        body.light {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .container {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid #404040;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        body.light .container {
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: #404040;
+        }
+
+        body.light .theme-toggle:hover {
+            background: #f8f9fa;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #e9ecef;
+            transition: color 0.3s ease;
+        }
+
+        body.light h1 {
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 32px;
+            color: #adb5bd;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        body.light .subtitle {
+            color: #6c757d;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .length-container {
+            background: #383838;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light .length-container {
+            background: #f8f9fa;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #555;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 12px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light .slider {
+            background: #e9ecef;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light .slider::-webkit-slider-thumb {
+            background: #495057;
+        }
+
+        .length-display {
+            text-align: center;
+            font-weight: 600;
+            color: #e9ecef;
+            transition: color 0.3s ease;
+        }
+
+        body.light .length-display {
+            color: #495057;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #383838;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background: #454545;
+        }
+
+        body.light .option {
+            background: #f8f9fa;
+        }
+
+        body.light .option:hover {
+            background: #e9ecef;
+        }
+
+        .option input {
+            margin-right: 8px;
+        }
+
+        .option label {
+            cursor: pointer;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: #e9ecef;
+            color: #2d2d2d;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .generate-btn:hover {
+            background: #dee2e6;
+        }
+
+        body.light .generate-btn {
+            background: #495057;
+            color: white;
+        }
+
+        body.light .generate-btn:hover {
+            background: #343a40;
+        }
+
+        .password-display {
+            background: #383838;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        body.light .password-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .password-text {
+            font-family: 'SF Mono', Monaco, 'Consolas', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            color: #e9ecef;
+            width: 100%;
+            transition: color 0.3s ease;
+        }
+
+        body.light .password-text {
+            color: #2c3e50;
+        }
+
+        .placeholder {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        body.light .placeholder {
+            color: #adb5bd;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #555;
+            color: #e9ecef;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+
+        .password-display:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #666;
+        }
+
+        body.light .copy-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        body.light .copy-btn:hover {
+            background: #495057;
+        }
+
+        .strength {
+            text-align: center;
+            font-size: 13px;
+            color: #adb5bd;
+            display: none;
+            transition: color 0.3s ease;
+        }
+
+        body.light .strength {
+            color: #6c757d;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 24px 20px;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <span id="themeIcon">☀️</span>
+        </button>
+        
+        <h1>Password Generator</h1>
+        <p class="subtitle">Create secure passwords</p>
+        
+        <div class="form-group">
+            <div class="length-container">
+                <label for="length">Length</label>
+                <input type="range" id="length" class="slider" min="6" max="50" value="16">
+                <div class="length-display" id="lengthDisplay">16</div>
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <div class="option">
+                <input type="checkbox" id="lowercase" checked>
+                <label for="lowercase">Lowercase</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="uppercase" checked>
+                <label for="uppercase">Uppercase</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="numbers" checked>
+                <label for="numbers">Numbers</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="symbols">
+                <label for="symbols">Symbols</label>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generatePassword()">
+            Generate Password
+        </button>
+
+        <div class="password-display" id="passwordDisplay">
+            <div class="password-text placeholder" id="passwordText">Click generate to create password</div>
+            <button class="copy-btn" onclick="copyPassword()">Copy</button>
+        </div>
+
+        <div class="strength" id="strength">Strong</div>
+    </div>
+
+    <script>
+        const lengthSlider = document.getElementById('length');
+        const lengthDisplay = document.getElementById('lengthDisplay');
+
+        lengthSlider.addEventListener('input', function() {
+            lengthDisplay.textContent = this.value;
+        });
+
+        function generatePassword() {
+            const length = parseInt(lengthSlider.value);
+            const lowercase = document.getElementById('lowercase').checked;
+            const uppercase = document.getElementById('uppercase').checked;
+            const numbers = document.getElementById('numbers').checked;
+            const symbols = document.getElementById('symbols').checked;
+
+            if (!lowercase && !uppercase && !numbers && !symbols) {
+                alert('Select at least one option');
+                return;
+            }
+
+            let chars = '';
+            if (lowercase) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (uppercase) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (numbers) chars += '0123456789';
+            if (symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const passwordText = document.getElementById('passwordText');
+            passwordText.textContent = password;
+            passwordText.classList.remove('placeholder');
+
+            document.getElementById('strength').style.display = 'block';
+        }
+
+        function copyPassword() {
+            const passwordText = document.getElementById('passwordText');
+            if (passwordText.classList.contains('placeholder')) return;
+
+            navigator.clipboard.writeText(passwordText.textContent).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                }, 1500);
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (document.body.classList.contains('light')) {
+                themeIcon.textContent = '🌙';
+            } else {
+                themeIcon.textContent = '☀️';
+            }
+        }
+
+        // Generate initial password
+        generatePassword();
+    </script>
+</body>
+</html>
