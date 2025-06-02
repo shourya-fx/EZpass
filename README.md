@@ -24,8 +24,6 @@ It allows you to customize the password length and include lowercase, uppercase,
 Access the live version here:  
 [EZpass](https://shourya-fx.github.io/EZpass/))
 
-*(Replace `yourusername` and repo name with your actual GitHub info)*
-
 ## How to Run Locally
 
 1. Clone the repository or download the files.
@@ -37,4 +35,4 @@ This project is open source and free to use.
 
 ---
 
-Created by Your Name (or Your GitHub username)
+Created by me ofc....
