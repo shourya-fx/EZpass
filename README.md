@@ -22,7 +22,7 @@ It allows you to customize the password length and include lowercase, uppercase,
 ## Live Demo
 
 Access the live version here:  
-[EZpass](https://shourya-fx.github.io/EZpass/))
+[EZpass](https://shourya-fx.github.io/EZpass/)
 
 ## How to Run Locally
 
